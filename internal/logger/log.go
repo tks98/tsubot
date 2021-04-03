@@ -13,6 +13,7 @@ var Log Logger
 // Logger represent common interface for logging function
 type Logger interface {
 	Errorf(format string, args ...interface{})
+	Error(args ...interface{})
 	Fatalf(format string, args ...interface{})
 	Fatal(args ...interface{})
 	Infof(format string, args ...interface{})
@@ -72,6 +73,11 @@ func newLogger(config []byte) Logger {
 func (logger *loggerWrapper) Errorf(format string, args ...interface{}) {
 	logger.lw.Errorf(format, args)
 }
+
+func (logger *loggerWrapper) Error(args ...interface{}) {
+	logger.lw.Error(args)
+}
+
 func (logger *loggerWrapper) Fatalf(format string, args ...interface{}) {
 	logger.lw.Fatalf(format, args)
 }

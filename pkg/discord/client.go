@@ -2,14 +2,14 @@ package discord
 
 import (
 	"fmt"
+	"github.com/tks98/tsubot/internal/logger"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
 )
 
 type client struct {
-	Session  *discordgo.Session
-	Commands map[string]func(discordgo.Session) error
+	Session *discordgo.Session
 }
 
 func CreateClient(token string) (*client, error) {
@@ -17,27 +17,25 @@ func CreateClient(token string) (*client, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return &client{Session: session}, nil
 }
 
 // MessageCreate is called by the AddHandler function everytime a new message is posted in any channel the bot has access too
-func (c *client) MessageCreate(m *discordgo.MessageCreate) error {
+func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// Ignore messages sent by the bot
-	if m.Author.ID == c.Session.State.User.ID {
-		return nil
+	if m.Author.ID == s.State.User.ID {
+		return
 	}
 
-	// Check if the message send is a valid key in the commands map
+	logger.Log.Debugf("Got message %s", m.Content)
+
+	// Check if the message sent is a valid key in the commands map
 	// If so, calls the function for that command
-	if command, ok := c.Commands[strings.ToLower(m.Content)]; ok {
-		err := command(*c.Session)
+	if command, ok := Commands[strings.ToLower(m.Content)]; ok {
+		err := command(m)
 		if err != nil {
-			return err
+			logger.Log.Error(err)
 		}
 	}
-
-	return nil
-
 }

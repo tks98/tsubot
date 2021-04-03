@@ -14,7 +14,6 @@ var config Config
 type Config struct {
 	APIKeys struct {
 		Discord string `yaml:"discord,omitempty"`
-		Osu     string `yaml:"osu,omitempty"`
 	} `yaml:"apiKeys"`
 	Commands []string `yaml:"commands"`
 }
