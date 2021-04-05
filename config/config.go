@@ -16,6 +16,8 @@ type Config struct {
 		Discord string `yaml:"discord,omitempty"`
 	} `yaml:"apiKeys"`
 	Commands []string `yaml:"commands"`
+	AllowedRoles []string `yaml:"allowedRoles"`
+	GuideID  string   `yaml:"guildID"`
 }
 
 func init() {

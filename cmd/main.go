@@ -17,7 +17,7 @@ func main() {
 	logger.Log.Info("Config parsed and logger init")
 
 	// Create discord client
-	client, err := discord.CreateClient(config.APIKeys.Discord)
+	client, err := discord.CreateClient(config.APIKeys.Discord, config.GuideID)
 	if err != nil {
 		logger.Log.Fatal(err)
 	}
@@ -28,8 +28,16 @@ func main() {
 		logger.Log.Fatal(err)
 	}
 
+	client.SetAllowedRoles(config.AllowedRoles)
+
+	// Parse config and init supported commands
+	err = client.InitRoles()
+	if err != nil {
+		logger.Log.Fatal(err)
+	}
+
 	// Register handlers
-	client.Session.AddHandler(discord.MessageCreate)
+	client.Session.AddHandler(discord.HandleMessage)
 
 	// Open a websocket connection to Discord and begin listening.
 	err = client.Session.Open()
