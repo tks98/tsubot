@@ -25,9 +25,6 @@ func (c *client) InitRoles() error {
 		}
 	}
 
-	logger.Log.Info(ServerRoles)
-	logger.Log.Info(AllowedRoles)
-
 	return nil
 }
 
@@ -39,6 +36,11 @@ func (c *client) ChangeRole(m *discordgo.MessageCreate) error {
 		logger.Log.Info(role.Name)
 		if role.Name == "Pro-Players" {
 			if _, err := c.Session.ChannelMessageSend(m.ChannelID, "You need to verify your osu! account. Please type !verify followed by a link to your account"); err != nil {
+				return err
+			}
+		} else {
+			err := c.Session.GuildMemberRoleAdd(m.Message.GuildID, m.Message.Author.ID, role.ID)
+			if err != nil {
 				return err
 			}
 		}
