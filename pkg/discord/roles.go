@@ -2,6 +2,7 @@ package discord
 
 import (
 	"github.com/bwmarrin/discordgo"
+	"github.com/tks98/tsubot/internal/logger"
 	"strings"
 )
 
@@ -24,14 +25,22 @@ func (c *client) InitRoles() error {
 		}
 	}
 
+	logger.Log.Info(ServerRoles)
+	logger.Log.Info(AllowedRoles)
+
 	return nil
 }
 
 func (c *client) ChangeRole(m *discordgo.MessageCreate) error {
-	message := strings.Split(strings.ToLower(m.Content), "")
+	message := strings.Split(strings.ToLower(m.Content), " ")
+
 	if role, ok := ServerRoles[message[1]]; ok {
-		if role.Name == "Pro-Player" {
-			if _, err := c.Session.ChannelMessageSend(m.ChannelID, "You need to verify your osu! account. Please type !verify followed by a link to your account"); err != nil {return err}
+		logger.Log.Info("here")
+		logger.Log.Info(role.Name)
+		if role.Name == "Pro-Players" {
+			if _, err := c.Session.ChannelMessageSend(m.ChannelID, "You need to verify your osu! account. Please type !verify followed by a link to your account"); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -41,6 +50,6 @@ func (c *client) ChangeRole(m *discordgo.MessageCreate) error {
 func (c *client) SetAllowedRoles(roles []string) {
 	AllowedRoles = make(map[string]struct{})
 	for _, role := range roles {
-		AllowedRoles[role] = struct{}{}
+		AllowedRoles[strings.ToLower(role)] = struct{}{}
 	}
 }

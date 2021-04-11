@@ -24,7 +24,6 @@ func (c *client) InitCommands(commands []string) error {
 		}
 	}
 
-
 	logger.Log.Info(Commands)
 
 	return nil
