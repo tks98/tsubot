@@ -15,7 +15,7 @@ func (c *client) GetGeneralChannelID() (string, error) {
 	}
 
 	for _, channel := range channels {
-		if channel.Name == "general" || channel.Type == discordgo.ChannelTypeGuildText {
+		if channel.Name == "general" && channel.Type == discordgo.ChannelTypeGuildText {
 			GeneralID = channel.ID
 			return channel.ID, nil
 		}
