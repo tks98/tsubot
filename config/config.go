@@ -13,7 +13,11 @@ var config Config
 
 type Config struct {
 	APIKeys struct {
-		Discord string `yaml:"discord,omitempty"`
+		Discord string `yaml:"discord"`
+		Osu     struct {
+			ClientID     string `yaml:"clientID"`
+			ClientSecret string `yaml:"clientSecret"`
+		}
 	} `yaml:"apiKeys"`
 	Commands     []string `yaml:"commands"`
 	AllowedRoles []string `yaml:"allowedRoles"`

@@ -21,6 +21,12 @@ func (c *client) InitCommands(commands []string) error {
 			Commands[prefix+command] = c.Ping
 		case "choose":
 			Commands[prefix+command] = c.ChangeRole
+		case "verify":
+			Commands[prefix+command] = c.Verify
+		case "roles":
+			Commands[prefix+command] = c.ListRoles
+		case "remove":
+			Commands[prefix+command] = c.ChangeRole
 		}
 	}
 

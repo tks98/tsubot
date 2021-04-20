@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/bwmarrin/discordgo"
 	"github.com/tks98/tsubot/config"
 	"github.com/tks98/tsubot/internal/logger"
 	"github.com/tks98/tsubot/pkg/discord"
@@ -17,7 +18,13 @@ func main() {
 	logger.Log.Info("Config parsed and logger init")
 
 	// Create discord client
-	client, err := discord.CreateClient(config.APIKeys.Discord, config.GuideID)
+	client, err := discord.CreateClient(config.APIKeys.Discord, config.GuideID, config.APIKeys.Osu.ClientID, config.APIKeys.Osu.ClientSecret)
+	if err != nil {
+		logger.Log.Fatal(err)
+	}
+
+	// Retrieve the ID of the general channel
+	_, err = client.GetGeneralChannelID()
 	if err != nil {
 		logger.Log.Fatal(err)
 	}
@@ -38,6 +45,9 @@ func main() {
 
 	// Register handlers
 	client.Session.AddHandler(discord.HandleMessage)
+	client.Session.AddHandler(discord.MemberJoin)
+
+	client.Session.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsAll)
 
 	// Open a websocket connection to Discord and begin listening.
 	err = client.Session.Open()
