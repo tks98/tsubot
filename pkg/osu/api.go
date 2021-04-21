@@ -8,9 +8,9 @@ import (
 	"net/http"
 )
 
-func (c *Client) GetUserGlobalRank(id int) (int, error) {
+func (c *Client) GetUserGlobalRank(id string) (int, error) {
 
-	url := fmt.Sprintf("https://osu.ppy.sh/api/v2/users/%d/osu", id)
+	url := fmt.Sprintf("https://osu.ppy.sh/api/v2/users/%s/osu", id)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Fatal(err)

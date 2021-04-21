@@ -1,10 +1,10 @@
 package discord
 
 import (
+	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/tks98/tsubot/internal/logger"
 	"strings"
-	"time"
 )
 
 var Commands map[string]interface{}
@@ -27,6 +27,8 @@ func (c *client) InitCommands(commands []string) error {
 			Commands[prefix+command] = c.ListRoles
 		case "remove":
 			Commands[prefix+command] = c.ChangeRole
+		case "rank":
+			Commands[prefix+command] = c.GetOsuStat
 		}
 	}
 
@@ -59,12 +61,8 @@ func HandleMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func (c *client) Ping(m *discordgo.MessageCreate) error {
-	start := time.Now()
-	if _, err := c.Session.ChannelMessageSend(m.ChannelID, "I'm working, stop poking me"); err != nil {
-		return err
-	}
-	stop := time.Now()
-	if _, err := c.Session.ChannelMessageSend(m.ChannelID, "Latency: "+stop.Sub(start).String()); err != nil {
+	content := fmt.Sprintf("I'm working, stop poking me: %s", c.Session.HeartbeatLatency())
+	if _, err := c.Session.ChannelMessageSend(m.ChannelID, content); err != nil {
 		return err
 	}
 

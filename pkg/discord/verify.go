@@ -3,7 +3,6 @@ package discord
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
-	"strconv"
 	"strings"
 )
 
@@ -23,12 +22,7 @@ func (c *client) Verify(m *discordgo.MessageCreate) error {
 
 	if len(splitProfile) > 3 {
 		if splitProfile[3] == "users" || splitProfile[3] == "u" {
-			userID, err := strconv.Atoi(splitProfile[4])
-			if err != nil {
-				return err
-			}
-
-			userRank, err := c.Osu.GetUserGlobalRank(userID)
+			userRank, err := c.Osu.GetUserGlobalRank(splitProfile[4])
 			if err != nil {
 				return err
 			}
