@@ -27,7 +27,7 @@ func (c *client) InitCommands(commands []string) error {
 			Commands[prefix+command] = c.ListRoles
 		case "remove":
 			Commands[prefix+command] = c.ChangeRole
-		case "rank":
+		case "info":
 			Commands[prefix+command] = c.GetOsuStat
 		}
 	}

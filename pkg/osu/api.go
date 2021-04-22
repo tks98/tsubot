@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func (c *Client) GetUserGlobalRank(id string) (int, error) {
+func (c *Client) GetUser(id string) (*User, error) {
 
 	url := fmt.Sprintf("https://osu.ppy.sh/api/v2/users/%s/osu", id)
 	req, err := http.NewRequest("GET", url, nil)
@@ -18,7 +18,7 @@ func (c *Client) GetUserGlobalRank(id string) (int, error) {
 
 	resp, err := c.Do(req)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 
 	if resp != nil {
@@ -36,5 +36,34 @@ func (c *Client) GetUserGlobalRank(id string) (int, error) {
 		log.Fatal(err)
 	}
 
-	return user.Statistics.GlobalRank, nil
+	return &user, nil
 }
+
+func (c *Client) GetUserScores(id string, kind string, offset string) (*User, error) {
+	url := fmt.Sprintf("https://osu.ppy.sh/api/v2/users/%s/scores/kind?include_fails=1", id)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	resp, err := c.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp != nil {
+		defer resp.Body.Close()
+	}
+
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf(string(bodyBytes))
+
+	return nil, err
+
+}
+
+

@@ -74,13 +74,29 @@ func (c *client) SetAllowedRoles(roles []string) {
 
 func (c *client) ListRoles(m *discordgo.MessageCreate) error {
 
-	var roles []string
-	for role, _ := range AllowedRoles {
-		roles = append(roles, role)
+	embed := &discordgo.MessageEmbed{
+		Author: &discordgo.MessageEmbedAuthor{
+			Name:    "tsubot",
+			IconURL: "https://cdn.discordapp.com/attachments/611191473601511434/834593625514049536/botimage.jpg",
+		},
+		Description: "These are the roles you can add or remove . Do **!choose** or **!remove** followed by the role name to apply.",
+		Fields: []*discordgo.MessageEmbedField{
+			{
+				Inline: true,
+				Name:   "User roles:",
+				Value: "`developers`, " +
+					"`osu-player`, " +
+					"`pro-players`, " +
+					"`youtubers`, " +
+					"`mappers`, " +
+					"`streamers`",
+			},
+		},
 	}
-	content := fmt.Sprintf("These are the roles you can choose with !roles:  %v", roles)
 
-	if _, err := c.Session.ChannelMessageSend(m.ChannelID, content); err != nil {
+	_, err := c.Session.ChannelMessageSendComplex(m.ChannelID, &discordgo.MessageSend{Embed: embed})
+
+	if err != nil {
 		return err
 	}
 
