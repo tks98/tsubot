@@ -3,7 +3,6 @@ package discord
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
-	"github.com/tks98/tsubot/internal/util"
 	"github.com/tks98/tsubot/pkg/osu"
 	"strings"
 )
@@ -59,7 +58,7 @@ func (c *client) Verify(m *discordgo.MessageCreate) error {
 func (c *client) handleVerified(m *discordgo.MessageCreate, user *osu.User) error {
 	embed := c.createUserInfoEmbed(user)
 	_, err := c.Session.ChannelMessageSendComplex(m.ChannelID, &discordgo.MessageSend{
-		Embed: embed,
+		Embed:   embed,
 		Content: "Thank you. Your Role has been successfully set to Pro-Player!",
 	})
 
@@ -68,58 +67,5 @@ func (c *client) handleVerified(m *discordgo.MessageCreate, user *osu.User) erro
 	}
 
 	return nil
-
-}
-
-func (c *client) createUserInfoEmbed(user *osu.User) *discordgo.MessageEmbed {
-	embed := &discordgo.MessageEmbed{
-		Title: user.Username,
-		URL: fmt.Sprintf("https://osu.ppy.sh/users/%d/", user.ID),
-		Thumbnail: &discordgo.MessageEmbedThumbnail{
-			URL: user.AvatarURL,
-			Width: 500,
-			Height: 500,
-		},
-		Author: &discordgo.MessageEmbedAuthor{
-			Name:    "tsubot",
-			IconURL: "https://cdn.discordapp.com/attachments/611191473601511434/834593625514049536/botimage.jpg",
-		},
-
-		Fields: []*discordgo.MessageEmbedField{
-			{
-				Inline: true,
-				Name:   "Global Rank",
-				Value:  util.NumberToString(user.Statistics.GlobalRank, ','),
-			},
-
-			{
-				Inline: true,
-				Name: "PP",
-				Value: util.NumberToString(int(user.Statistics.Pp), ','),
-			},
-			{
-				Inline: true,
-				Name: "Ranked Score",
-				Value: util.NumberToString(int(user.Statistics.RankedScore), ','),
-			},
-			{
-				Inline: true,
-				Name: "Total Hits",
-				Value: util.NumberToString(int(user.Statistics.TotalHits), ','),
-			},
-			{
-				Inline: true,
-				Name: "Max Combo",
-				Value: util.NumberToString(int(user.Statistics.MaximumCombo), ','),
-			},
-			{
-				Inline: true,
-				Name: "Play Count",
-				Value: util.NumberToString(int(user.Statistics.PlayCount), ','),
-			},
-		},
-	}
-
-	return embed
 
 }

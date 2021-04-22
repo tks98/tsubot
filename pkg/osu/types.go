@@ -122,3 +122,102 @@ type User struct {
 		Data []int  `json:"data"`
 	} `json:"rank_history"`
 }
+
+type UserScores []struct {
+	ID         int64    `json:"id"`
+	UserID     int      `json:"user_id"`
+	Accuracy   float64  `json:"accuracy"`
+	Mods       []string `json:"mods"`
+	Score      int      `json:"score"`
+	MaxCombo   int      `json:"max_combo"`
+	Perfect    bool     `json:"perfect"`
+	Statistics struct {
+		Count50   int `json:"count_50"`
+		Count100  int `json:"count_100"`
+		Count300  int `json:"count_300"`
+		CountGeki int `json:"count_geki"`
+		CountKatu int `json:"count_katu"`
+		CountMiss int `json:"count_miss"`
+	} `json:"statistics"`
+	Rank      string    `json:"rank"`
+	CreatedAt time.Time `json:"created_at"`
+	BestID    int64     `json:"best_id"`
+	Pp        float64   `json:"pp"`
+	Mode      string    `json:"mode"`
+	ModeInt   int       `json:"mode_int"`
+	Replay    bool      `json:"replay"`
+	Beatmap   struct {
+		DifficultyRating float64     `json:"difficulty_rating"`
+		ID               int         `json:"id"`
+		Mode             string      `json:"mode"`
+		Status           string      `json:"status"`
+		TotalLength      int         `json:"total_length"`
+		Version          string      `json:"version"`
+		Accuracy         float64         `json:"accuracy"`
+		Ar               float64        `json:"ar"`
+		BeatmapsetID     int         `json:"beatmapset_id"`
+		Bpm              int         `json:"bpm"`
+		Convert          bool        `json:"convert"`
+		CountCircles     int         `json:"count_circles"`
+		CountSliders     int         `json:"count_sliders"`
+		CountSpinners    int         `json:"count_spinners"`
+		Cs               float64         `json:"cs"`
+		DeletedAt        interface{} `json:"deleted_at"`
+		Drain            float64        `json:"drain"`
+		HitLength        int         `json:"hit_length"`
+		IsScoreable      bool        `json:"is_scoreable"`
+		LastUpdated      time.Time   `json:"last_updated"`
+		ModeInt          int         `json:"mode_int"`
+		Passcount        int         `json:"passcount"`
+		Playcount        int         `json:"playcount"`
+		Ranked           int         `json:"ranked"`
+		URL              string      `json:"url"`
+		Checksum         string      `json:"checksum"`
+	} `json:"beatmap"`
+	Beatmapset struct {
+		Artist        string `json:"artist"`
+		ArtistUnicode string `json:"artist_unicode"`
+		Covers        struct {
+			Cover       string `json:"cover"`
+			Cover2X     string `json:"cover@2x"`
+			Card        string `json:"card"`
+			Card2X      string `json:"card@2x"`
+			List        string `json:"list"`
+			List2X      string `json:"list@2x"`
+			Slimcover   string `json:"slimcover"`
+			Slimcover2X string `json:"slimcover@2x"`
+		} `json:"covers"`
+		Creator        string      `json:"creator"`
+		FavouriteCount int         `json:"favourite_count"`
+		Hype           interface{} `json:"hype"`
+		ID             int         `json:"id"`
+		Nsfw           bool        `json:"nsfw"`
+		PlayCount      int         `json:"play_count"`
+		PreviewURL     string      `json:"preview_url"`
+		Source         string      `json:"source"`
+		Status         string      `json:"status"`
+		Title          string      `json:"title"`
+		TitleUnicode   string      `json:"title_unicode"`
+		UserID         int         `json:"user_id"`
+		Video          bool        `json:"video"`
+	} `json:"beatmapset"`
+	Weight struct {
+		Percentage float64     `json:"percentage"`
+		Pp         float64 `json:"pp"`
+	} `json:"weight"`
+	User struct {
+		AvatarURL     string      `json:"avatar_url"`
+		CountryCode   string      `json:"country_code"`
+		DefaultGroup  string      `json:"default_group"`
+		ID            int         `json:"id"`
+		IsActive      bool        `json:"is_active"`
+		IsBot         bool        `json:"is_bot"`
+		IsDeleted     bool        `json:"is_deleted"`
+		IsOnline      bool        `json:"is_online"`
+		IsSupporter   bool        `json:"is_supporter"`
+		LastVisit     interface{} `json:"last_visit"`
+		PmFriendsOnly bool        `json:"pm_friends_only"`
+		ProfileColour interface{} `json:"profile_colour"`
+		Username      string      `json:"username"`
+	} `json:"user"`
+}

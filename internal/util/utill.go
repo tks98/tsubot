@@ -17,7 +17,6 @@ func NumberToString(n int, sep rune) string {
 		buff.WriteByte('-')
 	}
 
-
 	l := len(s)
 
 	commaIndex := 3 - ((l - startOffset) % 3)

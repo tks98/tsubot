@@ -39,8 +39,13 @@ func (c *Client) GetUser(id string) (*User, error) {
 	return &user, nil
 }
 
-func (c *Client) GetUserScores(id string, kind string, offset string) (*User, error) {
-	url := fmt.Sprintf("https://osu.ppy.sh/api/v2/users/%s/scores/kind?include_fails=1", id)
+func (c *Client) GetUserScores(id string, kind string, offset string) (*UserScores, error) {
+	id, err := c.GetUserID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	url := fmt.Sprintf("https://osu.ppy.sh/api/v2/users/%s/scores/%s/", id, kind)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Fatal(err)
@@ -60,10 +65,22 @@ func (c *Client) GetUserScores(id string, kind string, offset string) (*User, er
 		log.Fatal(err)
 	}
 
+	var scores UserScores
+	err = json.Unmarshal(bodyBytes, &scores)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	fmt.Printf(string(bodyBytes))
 
-	return nil, err
+	return &scores, nil
 
 }
 
-
+func (c *Client) GetUserID(name string) (string, error) {
+	user, err := c.GetUser(name)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%d", user.ID), nil
+}

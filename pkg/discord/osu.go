@@ -15,17 +15,33 @@ func (c *client) GetOsuStat(m *discordgo.MessageCreate) error {
 
 		if stat == "-recent" || stat == "-r" {
 			offset = "1"
+			stat = "recent"
 		} else if stat == "-top" || stat == "-t" {
 			offset = "100"
+			stat = "best"
 		} else if stat == "-firsts" || stat == "-f" {
 			offset = "100"
+			stat = "firsts"
 		} else {
 			return fmt.Errorf("you did not enter valid flags for the !info command")
 		}
 
-		_, err := c.Osu.GetUserScores(userID, stat, offset)
+		scores, err := c.Osu.GetUserScores(userID, stat, offset)
 		if err != nil {
 			return err
+		}
+
+		if stat == "recent" {
+			embed, err := c.createRecentScoreEmbed(scores)
+			if err != nil {
+				return err
+			}
+
+			err = c.PostEmbed(m.ChannelID, embed)
+			if err != nil {
+				return err
+			}
+
 		}
 
 	} else if len(content) == 2 {
@@ -34,12 +50,7 @@ func (c *client) GetOsuStat(m *discordgo.MessageCreate) error {
 		if err != nil {
 
 		}
-
-		embed := c.createUserInfoEmbed(user)
-		_, err = c.Session.ChannelMessageSendComplex(m.ChannelID, &discordgo.MessageSend{
-			Embed: embed,
-		})
-
+		err = c.PostEmbed(m.ChannelID, c.createUserInfoEmbed(user))
 		if err != nil {
 			return err
 		}
