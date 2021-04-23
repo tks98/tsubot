@@ -5,6 +5,8 @@ github.com/clinet/discordgo-embed v0.0.0-20190411043415-d754bc1a576c h1:U+zMhk1P
 github.com/clinet/discordgo-embed v0.0.0-20190411043415-d754bc1a576c/go.mod h1:p2/vBoWL0mBfu/3eXnLHKRD5HHlaqGBJqe+et80Z0cQ=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/flesnuk/oppai5 v0.0.0-20210408155519-6b86eef4d3d1 h1:DoFnmOzoc2nI3RW9S/7KA7A/bc013Xz8oYa0XU+da/Q=
+github.com/flesnuk/oppai5 v0.0.0-20210408155519-6b86eef4d3d1/go.mod h1:WuRzYLXIfYb2TdTWDWXJVWD+AYd6bzgAWlnweIYR65k=
 github.com/google/renameio v0.1.0/go.mod h1:KWCgfxg9yswjAJkECMjeO8J8rahYeXnNhOm40UhjYkI=
 github.com/gorilla/websocket v1.4.0 h1:WDFjx/TMzVgy9VdMMQi2K2Emtwi2QcUQsztZ/zLaH/Q=
 github.com/gorilla/websocket v1.4.0/go.mod h1:E7qHFY5m1UJ88s3WnNqhKjPHQ0heANvMoAMk2YaljkQ=

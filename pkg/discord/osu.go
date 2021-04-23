@@ -31,18 +31,16 @@ func (c *client) GetOsuStat(m *discordgo.MessageCreate) error {
 			return err
 		}
 
-		if stat == "recent" {
-			embed, err := c.createRecentScoreEmbed(scores)
-			if err != nil {
-				return err
-			}
-
-			err = c.PostEmbed(m.ChannelID, embed)
-			if err != nil {
-				return err
-			}
-
+		embed, err := c.createRecentScoreEmbed(scores)
+		if err != nil {
+			return err
 		}
+
+		err = c.PostEmbed(m.ChannelID, embed)
+		if err != nil {
+			return err
+		}
+
 
 	} else if len(content) == 2 {
 		userID = content[1]

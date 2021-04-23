@@ -2,6 +2,7 @@ package util
 
 import (
 	"bytes"
+	"fmt"
 	"strconv"
 )
 
@@ -37,4 +38,11 @@ func NumberToString(n int, sep rune) string {
 	}
 
 	return buff.String()
+}
+
+func SecondsToMinutes(inSeconds int) string {
+	minutes := inSeconds / 60
+	seconds := inSeconds % 60
+	str := fmt.Sprintf("%d:%d", minutes, seconds)
+	return str
 }
