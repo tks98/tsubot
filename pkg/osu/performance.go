@@ -6,7 +6,12 @@ import (
 	"os"
 )
 
-func (c *Client) PerformanceCalc(beatmapFile *os.File, parameters *oppai.Parameters) (*oppai.PP, error) {
+type Performance struct {
+	Pp          *oppai.PP
+	BeatmapInfo *oppai.Map
+}
+
+func (c *Client) PerformanceCalc(beatmapFile *os.File, parameters *oppai.Parameters) (*Performance, error) {
 
 	defer os.Remove(beatmapFile.Name())
 
@@ -16,10 +21,9 @@ func (c *Client) PerformanceCalc(beatmapFile *os.File, parameters *oppai.Paramet
 	}
 
 	beatmap := oppai.Parse(f)
-
 	if beatmap != nil {
-		result := oppai.PPInfo(beatmap, parameters)
-		return &result, nil
+		pp := oppai.PPInfo(beatmap, parameters)
+		return &Performance{Pp: &pp, BeatmapInfo: beatmap}, nil
 	}
 
 

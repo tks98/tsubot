@@ -94,11 +94,13 @@ func (c *client) createRecentScoreEmbed(scores *osu.UserScores) (*discordgo.Mess
 		Misses: uint16(score.Statistics.CountMiss),
 	}
 
-	pp, err := c.Osu.PerformanceCalc(file, parameters)
+	// calculate the performance point information for the score
+	performance, err := c.Osu.PerformanceCalc(file, parameters)
 	if err != nil {
 		return nil, err
 	}
 
+	// create the embed to display score information
 	embed := &discordgo.MessageEmbed{
 		Title: fmt.Sprintf("%s [%s]", score.Beatmapset.Title, score.Beatmap.Version),
 		URL:   score.Beatmap.URL,
@@ -118,7 +120,7 @@ func (c *client) createRecentScoreEmbed(scores *osu.UserScores) (*discordgo.Mess
 			{
 				Inline: true,
 				Name:   "Stars",
-				Value:  fmt.Sprintf("%.2f", pp.Diff.Total),
+				Value:  fmt.Sprintf("%.2f", performance.Pp.Diff.Total),
 			},
 
 			{
@@ -149,8 +151,8 @@ func (c *client) createRecentScoreEmbed(scores *osu.UserScores) (*discordgo.Mess
 			},
 			{
 				Inline: true,
-				Name:   "Max Combo",
-				Value:  fmt.Sprintf("%dx", score.MaxCombo),
+				Name:   "Combo",
+				Value:  fmt.Sprintf("%d/%dx", score.MaxCombo, performance.BeatmapInfo.MaxCombo),
 			},
 		},
 	}
