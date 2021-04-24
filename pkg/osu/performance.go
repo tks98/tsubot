@@ -9,7 +9,7 @@ import (
 type Performance struct {
 	Pp          *oppai.PP
 	BeatmapInfo *oppai.Map
-	PpFc *oppai.PP
+	PpFc        *oppai.PP
 }
 
 func (c *Client) PerformanceCalc(beatmapFile *os.File, parameters *oppai.Parameters) (*Performance, error) {
@@ -25,7 +25,6 @@ func (c *Client) PerformanceCalc(beatmapFile *os.File, parameters *oppai.Paramet
 	if beatmap != nil {
 		pp := oppai.PPInfo(beatmap, parameters)
 
-
 		// calc pp if fc
 		// turn misses into 300's
 		parameters.N300 += parameters.Misses
@@ -35,10 +34,6 @@ func (c *Client) PerformanceCalc(beatmapFile *os.File, parameters *oppai.Paramet
 
 		return &Performance{Pp: &pp, BeatmapInfo: beatmap, PpFc: &ppFC}, nil
 	}
-
-
-
-
 
 	return nil, fmt.Errorf("oppai returned nil map file")
 }

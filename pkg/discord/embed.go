@@ -11,51 +11,36 @@ import (
 )
 
 func (c *client) createUserInfoEmbed(user *osu.User) *discordgo.MessageEmbed {
+
+	title := fmt.Sprintf("osu! Standard Profile Stats for %s", user.Username)
+
+	description := fmt.Sprintf("> **Rank:** %s\n > **Level:** %d => %d%% to %d\n > **PP:** %.2f **Acc**: %.2f%%\n > **Playcount:** %d (%d hours)\n > **Ranked Score:** %s",
+		util.NumberToString(user.Statistics.GlobalRank, ','), user.Statistics.Level.Current, user.Statistics.Level.Progress, user.Statistics.Level.Current + 1,  user.Statistics.Pp, user.Statistics.HitAccuracy, user.Statistics.PlayCount, user.Statistics.PlayTime / 3600, util.NumberToString(int(user.Statistics.RankedScore), ','))
+
+	var status string
+	if user.IsOnline {
+		status = fmt.Sprintf("Currently Online")
+	} else {
+		status = fmt.Sprintf("User is currently offline")
+	}
+
+
 	embed := &discordgo.MessageEmbed{
-		Title: user.Username,
-		URL:   fmt.Sprintf("https://osu.ppy.sh/users/%d/", user.ID),
-		Thumbnail: &discordgo.MessageEmbedThumbnail{
-			URL:    user.AvatarURL,
-			Width:  500,
-			Height: 500,
-		},
+
 		Author: &discordgo.MessageEmbedAuthor{
-			Name:    "tsubot",
-			IconURL: "https://cdn.discordapp.com/attachments/611191473601511434/834593625514049536/botimage.jpg",
+			Name:    title,
+			URL:     fmt.Sprintf("https://osu.ppy.sh/users/%d/", user.ID),
+			IconURL: "https://upload.wikimedia.org/wikipedia/commons/4/44/Osu%21Logo_%282019%29.png",
 		},
 
-		Fields: []*discordgo.MessageEmbedField{
-			{
-				Inline: true,
-				Name:   "Global Rank",
-				Value:  util.NumberToString(user.Statistics.GlobalRank, ','),
-			},
+		Thumbnail: &discordgo.MessageEmbedThumbnail {
+			URL: user.AvatarURL,
+		},
 
-			{
-				Inline: true,
-				Name:   "PP",
-				Value:  util.NumberToString(int(user.Statistics.Pp), ','),
-			},
-			{
-				Inline: true,
-				Name:   "Ranked Score",
-				Value:  util.NumberToString(int(user.Statistics.RankedScore), ','),
-			},
-			{
-				Inline: true,
-				Name:   "Total Hits",
-				Value:  util.NumberToString(int(user.Statistics.TotalHits), ','),
-			},
-			{
-				Inline: true,
-				Name:   "Max Combo",
-				Value:  util.NumberToString(int(user.Statistics.MaximumCombo), ','),
-			},
-			{
-				Inline: true,
-				Name:   "Play Count",
-				Value:  util.NumberToString(int(user.Statistics.PlayCount), ','),
-			},
+		Description: description,
+
+		Footer: &discordgo.MessageEmbedFooter{
+			Text: status,
 		},
 	}
 
@@ -101,9 +86,8 @@ func (c *client) createRecentScoreEmbed(scores *osu.UserScores) (*discordgo.Mess
 	}
 	title := fmt.Sprintf("%s [%s] +%s [%s, %.2f★] | (%.2f%%) %d/%dx | %.2fpp",
 		score.Beatmapset.Title, score.Beatmap.Version, mods, score.Beatmapset.Creator,
-		performance.Pp.Diff.Total, score.Accuracy * 100, score.MaxCombo,
-		performance.BeatmapInfo.MaxCombo, score.Pp )
-
+		performance.Pp.Diff.Total, score.Accuracy*100, score.MaxCombo,
+		performance.BeatmapInfo.MaxCombo, score.Pp)
 
 	mapInfo := fmt.Sprintf("AR: **%.1f** | OD: **%.1f** | CS: **%.1f** | HP: **%.1f** | Length: **%s**", performance.Pp.Stats.AR, performance.Pp.Stats.OD, performance.Pp.Stats.CS, performance.Pp.Stats.HP, util.SecondsToMinutes(score.Beatmap.TotalLength))
 
@@ -112,7 +96,7 @@ func (c *client) createRecentScoreEmbed(scores *osu.UserScores) (*discordgo.Mess
 	var ifFC string
 	var description string
 	if score.MaxCombo < performance.BeatmapInfo.MaxCombo {
-		ifFC = fmt.Sprintf( "**%.2fpp** for __%.2f%%__", performance.PpFc.PP.Total, performance.PpFc.PP.ComputedAccuracy.Value() * 100)
+		ifFC = fmt.Sprintf("**%.2fpp** for __%.2f%%__", performance.PpFc.PP.Total, performance.PpFc.PP.ComputedAccuracy.Value()*100)
 		description = fmt.Sprintf("> **Map:** %s\n > **Acc:** %s\n > **FC:** %s", mapInfo, accStats, ifFC)
 	} else {
 		description = fmt.Sprintf("> **Map:** %s\n > **Acc:** %s\n", mapInfo, accStats)
@@ -121,22 +105,21 @@ func (c *client) createRecentScoreEmbed(scores *osu.UserScores) (*discordgo.Mess
 	// create the embed to display score information
 	embed := &discordgo.MessageEmbed{
 		Author: &discordgo.MessageEmbedAuthor{
-			Name: title,
-			URL: score.Beatmap.URL,
+			Name:    title,
+			URL:     score.Beatmap.URL,
 			IconURL: score.User.AvatarURL,
 		},
 
 		Thumbnail: &discordgo.MessageEmbedThumbnail{
 			URL: score.Beatmapset.Covers.List2X,
-
 		},
 
 		Description: description,
 
 		Footer: &discordgo.MessageEmbedFooter{
 			Text: fmt.Sprintf("Set on %v", score.CreatedAt.Format("2006-01-02")),
+			IconURL: "https://upload.wikimedia.org/wikipedia/commons/4/44/Osu%21Logo_%282019%29.png",
 		},
-
 	}
 
 	return embed, nil

@@ -54,3 +54,4 @@ func SecondsToMinutes(inSeconds int) string {
 	str := fmt.Sprintf("%d:%s", minutes, s)
 	return str
 }
+

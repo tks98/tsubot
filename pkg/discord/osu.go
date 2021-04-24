@@ -41,7 +41,6 @@ func (c *client) GetOsuStat(m *discordgo.MessageCreate) error {
 			return err
 		}
 
-
 	} else if len(content) == 2 {
 		userID = content[1]
 		user, err := c.Osu.GetUser(userID)
