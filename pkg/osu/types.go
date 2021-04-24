@@ -156,7 +156,7 @@ type UserScores []struct {
 		Accuracy         float64     `json:"accuracy"`
 		Ar               float64     `json:"ar"`
 		BeatmapsetID     int         `json:"beatmapset_id"`
-		Bpm              float64         `json:"bpm"`
+		Bpm              float64     `json:"bpm"`
 		Convert          bool        `json:"convert"`
 		CountCircles     int         `json:"count_circles"`
 		CountSliders     int         `json:"count_sliders"`

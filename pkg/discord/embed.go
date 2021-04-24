@@ -105,7 +105,7 @@ func (c *client) createRecentScoreEmbed(scores *osu.UserScores) (*discordgo.Mess
 		performance.BeatmapInfo.MaxCombo, score.Pp )
 
 
-	mapInfo := fmt.Sprintf("AR:**%.1f** | OD:**%.1f** | CS:**%.1f** | HP:**%.1f** | Length:**%s**", performance.Pp.Stats.AR, performance.Pp.Stats.OD, performance.Pp.Stats.CS, performance.Pp.Stats.HP, util.SecondsToMinutes(score.Beatmap.TotalLength))
+	mapInfo := fmt.Sprintf("AR: **%.1f** | OD: **%.1f** | CS: **%.1f** | HP: **%.1f** | Length: **%s**", performance.Pp.Stats.AR, performance.Pp.Stats.OD, performance.Pp.Stats.CS, performance.Pp.Stats.HP, util.SecondsToMinutes(score.Beatmap.TotalLength))
 
 	accStats := fmt.Sprintf("[**%d**/**%d**/**%d**/**%d**]", score.Statistics.Count300, score.Statistics.Count100, score.Statistics.Count50, score.Statistics.CountMiss)
 
@@ -117,8 +117,6 @@ func (c *client) createRecentScoreEmbed(scores *osu.UserScores) (*discordgo.Mess
 	} else {
 		description = fmt.Sprintf("> **Map:** %s\n > **Acc:** %s\n", mapInfo, accStats)
 	}
-
-
 
 	// create the embed to display score information
 	embed := &discordgo.MessageEmbed{
