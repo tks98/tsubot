@@ -43,6 +43,14 @@ func NumberToString(n int, sep rune) string {
 func SecondsToMinutes(inSeconds int) string {
 	minutes := inSeconds / 60
 	seconds := inSeconds % 60
-	str := fmt.Sprintf("%d:%d", minutes, seconds)
+
+	var s string
+	if seconds < 10 {
+		s = fmt.Sprintf("%d%d", 0, seconds)
+	} else {
+		s = fmt.Sprintf("%d", seconds)
+	}
+
+	str := fmt.Sprintf("%d:%s", minutes, s)
 	return str
 }

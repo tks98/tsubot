@@ -99,62 +99,46 @@ func (c *client) createRecentScoreEmbed(scores *osu.UserScores) (*discordgo.Mess
 	if err != nil {
 		return nil, err
 	}
+	title := fmt.Sprintf("%s [%s] +%s [%s, %.2f★] | (%.2f%%) %d/%dx | %.2fpp",
+		score.Beatmapset.Title, score.Beatmap.Version, mods, score.Beatmapset.Creator,
+		performance.Pp.Diff.Total, score.Accuracy * 100, score.MaxCombo,
+		performance.BeatmapInfo.MaxCombo, score.Pp )
+
+
+	mapInfo := fmt.Sprintf("AR:**%.1f** | OD:**%.1f** | CS:**%.1f** | HP:**%.1f** | Length:**%s**", performance.Pp.Stats.AR, performance.Pp.Stats.OD, performance.Pp.Stats.CS, performance.Pp.Stats.HP, util.SecondsToMinutes(score.Beatmap.TotalLength))
+
+	accStats := fmt.Sprintf("[**%d**/**%d**/**%d**/**%d**]", score.Statistics.Count300, score.Statistics.Count100, score.Statistics.Count50, score.Statistics.CountMiss)
+
+	var ifFC string
+	var description string
+	if score.MaxCombo < performance.BeatmapInfo.MaxCombo {
+		ifFC = fmt.Sprintf( "**%.2fpp** for __%.2f%%__", performance.PpFc.PP.Total, performance.PpFc.PP.ComputedAccuracy.Value() * 100)
+		description = fmt.Sprintf("> **Map:** %s\n > **Acc:** %s\n > **FC:** %s", mapInfo, accStats, ifFC)
+	} else {
+		description = fmt.Sprintf("> **Map:** %s\n > **Acc:** %s\n", mapInfo, accStats)
+	}
+
+
 
 	// create the embed to display score information
 	embed := &discordgo.MessageEmbed{
-		Title: fmt.Sprintf("%s [%s]", score.Beatmapset.Title, score.Beatmap.Version),
-		URL:   score.Beatmap.URL,
+		Author: &discordgo.MessageEmbedAuthor{
+			Name: title,
+			URL: score.Beatmap.URL,
+			IconURL: score.User.AvatarURL,
+		},
 
 		Thumbnail: &discordgo.MessageEmbedThumbnail{
 			URL: score.Beatmapset.Covers.List2X,
 
 		},
 
-		Fields: []*discordgo.MessageEmbedField{
-			{
-				Inline: true,
-				Name:   "PP",
-				Value:  fmt.Sprintf("%.2f", score.Pp),
-			},
+		Description: description,
 
-			{
-				Inline: true,
-				Name:   "Stars",
-				Value:  fmt.Sprintf("%.2f", performance.Pp.Diff.Total),
-			},
-
-			{
-				Inline: true,
-				Name:   "Length",
-				Value:  util.SecondsToMinutes(score.Beatmap.TotalLength),
-			},
-
-			{
-				Inline: true,
-				Name:   "BPM",
-				Value:  fmt.Sprintf("%.2f", score.Beatmap.Bpm),
-			},
-			{
-				Inline: true,
-				Name:   "Mods",
-				Value:  fmt.Sprintf("%v", mods),
-			},
-			{
-				Inline: true,
-				Name:   "Accuracy",
-				Value:  fmt.Sprintf("%.2f%s", score.Accuracy * 100, "%"),
-			},
-			{
-				Inline: true,
-				Name:   "Acc Stats",
-				Value:  fmt.Sprintf("[%d/%d/%d/%d]", score.Statistics.Count300, score.Statistics.Count100, score.Statistics.Count50, score.Statistics.CountMiss),
-			},
-			{
-				Inline: true,
-				Name:   "Combo",
-				Value:  fmt.Sprintf("%d/%dx", score.MaxCombo, performance.BeatmapInfo.MaxCombo),
-			},
+		Footer: &discordgo.MessageEmbedFooter{
+			Text: fmt.Sprintf("Set on %v", score.CreatedAt.Format("2006-01-02")),
 		},
+
 	}
 
 	return embed, nil
