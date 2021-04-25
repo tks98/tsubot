@@ -16,7 +16,7 @@ func (c *client) createUserInfoEmbed(user *osu.User) *discordgo.MessageEmbed {
 	title := fmt.Sprintf("osu! Standard Profile Stats for %s", user.Username)
 
 	description := fmt.Sprintf("> **Rank:** %s\n > **Level:** %d => %d%% to %d\n > **PP:** %.2f **Acc**: %.2f%%\n > **Playcount:** %d (%d hours)\n > **Ranked Score:** %s",
-		util.NumberToString(user.Statistics.GlobalRank, ','), user.Statistics.Level.Current, user.Statistics.Level.Progress, user.Statistics.Level.Current + 1,  user.Statistics.Pp, user.Statistics.HitAccuracy, user.Statistics.PlayCount, user.Statistics.PlayTime / 3600, util.NumberToString(int(user.Statistics.RankedScore), ','))
+		util.NumberToString(user.Statistics.GlobalRank, ','), user.Statistics.Level.Current, user.Statistics.Level.Progress, user.Statistics.Level.Current+1, user.Statistics.Pp, user.Statistics.HitAccuracy, user.Statistics.PlayCount, user.Statistics.PlayTime/3600, util.NumberToString(int(user.Statistics.RankedScore), ','))
 
 	var status string
 	if user.IsOnline {
@@ -24,7 +24,6 @@ func (c *client) createUserInfoEmbed(user *osu.User) *discordgo.MessageEmbed {
 	} else {
 		status = fmt.Sprintf("User is currently offline")
 	}
-
 
 	embed := &discordgo.MessageEmbed{
 
@@ -34,7 +33,7 @@ func (c *client) createUserInfoEmbed(user *osu.User) *discordgo.MessageEmbed {
 			IconURL: "https://upload.wikimedia.org/wikipedia/commons/4/44/Osu%21Logo_%282019%29.png",
 		},
 
-		Thumbnail: &discordgo.MessageEmbedThumbnail {
+		Thumbnail: &discordgo.MessageEmbedThumbnail{
 			URL: user.AvatarURL,
 		},
 
@@ -94,9 +93,11 @@ func (c *client) createRecentScoreEmbed(scores *osu.UserScores, offset string) (
 
 	accStats := fmt.Sprintf("[**%d**/**%d**/**%d**/**%d**]", score.Statistics.Count300, score.Statistics.Count100, score.Statistics.Count50, score.Statistics.CountMiss)
 
+	// try to determine if the score was an fc
+	// not sure how to do this for slider breaks though
 	var ifFC string
 	var description string
-	if score.MaxCombo < performance.BeatmapInfo.MaxCombo {
+	if score.MaxCombo < performance.BeatmapInfo.MaxCombo && score.Statistics.CountMiss > 0 {
 		ifFC = fmt.Sprintf("**%.2fpp** for __%.2f%%__", performance.PpFc.PP.Total, performance.PpFc.PP.ComputedAccuracy.Value()*100)
 		description = fmt.Sprintf("> **Map:** %s\n > **Acc:** %s\n > **FC:** %s", mapInfo, accStats, ifFC)
 	} else {
@@ -121,7 +122,7 @@ func (c *client) createRecentScoreEmbed(scores *osu.UserScores, offset string) (
 		since = duration.Hours() / 24
 		durationScale = "days"
 		footer = fmt.Sprintf("Set %.0f %s ago", since, durationScale)
-	} else if duration.Seconds() > 31556952  {
+	} else if duration.Seconds() > 31556952 {
 		since = duration.Hours() / 8760
 		durationScale = "years"
 		footer = fmt.Sprintf("Set %.1f %s ago", since, durationScale)
@@ -130,7 +131,6 @@ func (c *client) createRecentScoreEmbed(scores *osu.UserScores, offset string) (
 		durationScale = "seconds"
 		footer = fmt.Sprintf("Set %.0f %s ago", since, durationScale)
 	}
-
 
 	// create the embed to display score information
 	embed := &discordgo.MessageEmbed{
@@ -147,7 +147,7 @@ func (c *client) createRecentScoreEmbed(scores *osu.UserScores, offset string) (
 		Description: description,
 
 		Footer: &discordgo.MessageEmbedFooter{
-			Text: footer,
+			Text:    footer,
 			IconURL: "https://upload.wikimedia.org/wikipedia/commons/4/44/Osu%21Logo_%282019%29.png",
 		},
 	}
