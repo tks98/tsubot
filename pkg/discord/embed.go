@@ -8,6 +8,7 @@ import (
 	"github.com/tks98/tsubot/pkg/osu"
 	"os"
 	"strings"
+	"time"
 )
 
 func (c *client) createUserInfoEmbed(user *osu.User) *discordgo.MessageEmbed {
@@ -48,14 +49,14 @@ func (c *client) createUserInfoEmbed(user *osu.User) *discordgo.MessageEmbed {
 
 }
 
-func (c *client) createRecentScoreEmbed(scores *osu.UserScores) (*discordgo.MessageEmbed, error) {
+func (c *client) createRecentScoreEmbed(scores *osu.UserScores, offset string) (*discordgo.MessageEmbed, error) {
 
 	if len(*scores) == 0 {
 		return nil, fmt.Errorf("scores api call returned empty")
 
 	}
 
-	score := (*scores)[1]
+	score := (*scores)[0]
 	mods := score.Mods
 	if len(mods) == 0 {
 		mods = append(mods, "NM")
@@ -102,6 +103,35 @@ func (c *client) createRecentScoreEmbed(scores *osu.UserScores) (*discordgo.Mess
 		description = fmt.Sprintf("> **Map:** %s\n > **Acc:** %s\n", mapInfo, accStats)
 	}
 
+	// calculate the time since the score was set
+	duration := time.Since(score.CreatedAt)
+
+	var since float64
+	var durationScale string
+	var footer string
+	if duration.Seconds() > 60 && duration.Seconds() < 3600 {
+		since = duration.Minutes()
+		durationScale = "minutes"
+		footer = fmt.Sprintf("Set %.0f %s ago", since, durationScale)
+	} else if duration.Seconds() > 3600 && duration.Seconds() < 86400 {
+		since = duration.Hours()
+		durationScale = "hours"
+		footer = fmt.Sprintf("Set %.1f %s ago", since, durationScale)
+	} else if duration.Seconds() > 86400 && duration.Seconds() < 31556952 {
+		since = duration.Hours() / 24
+		durationScale = "days"
+		footer = fmt.Sprintf("Set %.0f %s ago", since, durationScale)
+	} else if duration.Seconds() > 31556952  {
+		since = duration.Hours() / 8760
+		durationScale = "years"
+		footer = fmt.Sprintf("Set %.1f %s ago", since, durationScale)
+	} else {
+		since = duration.Seconds()
+		durationScale = "seconds"
+		footer = fmt.Sprintf("Set %.0f %s ago", since, durationScale)
+	}
+
+
 	// create the embed to display score information
 	embed := &discordgo.MessageEmbed{
 		Author: &discordgo.MessageEmbedAuthor{
@@ -117,7 +147,7 @@ func (c *client) createRecentScoreEmbed(scores *osu.UserScores) (*discordgo.Mess
 		Description: description,
 
 		Footer: &discordgo.MessageEmbedFooter{
-			Text: fmt.Sprintf("Set on %v", score.CreatedAt.Format("2006-01-02")),
+			Text: footer,
 			IconURL: "https://upload.wikimedia.org/wikipedia/commons/4/44/Osu%21Logo_%282019%29.png",
 		},
 	}

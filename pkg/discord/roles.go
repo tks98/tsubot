@@ -60,6 +60,18 @@ func (c *client) ChangeRole(m *discordgo.MessageCreate) error {
 			}
 
 		}
+	} else {
+
+		var content string
+		if strings.ToLower(message[1]) == "owners" || strings.ToLower(message[1]) == "admins" || strings.ToLower(message[1]) == "bot" {
+			content = fmt.Sprintf("Nice try")
+		} else {
+			content = fmt.Sprintf("You dont have permissions to choose this role, or it does not exist.")
+		}
+
+		if _, err := c.Session.ChannelMessageSend(m.ChannelID, content); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -76,7 +88,7 @@ func (c *client) ListRoles(m *discordgo.MessageCreate) error {
 
 	embed := &discordgo.MessageEmbed{
 		Author: &discordgo.MessageEmbedAuthor{
-			Name:    "tsubot",
+			Name:    "TrafisBot",
 			IconURL: "https://cdn.discordapp.com/attachments/611191473601511434/834593625514049536/botimage.jpg",
 		},
 		Description: "These are the roles you can add or remove . Do **!choose** or **!remove** followed by the role name to apply.",
@@ -85,7 +97,7 @@ func (c *client) ListRoles(m *discordgo.MessageCreate) error {
 				Inline: true,
 				Name:   "User roles:",
 				Value: "`developers`, " +
-					"`osu-player`, " +
+					"`osu-players`, " +
 					"`pro-players`, " +
 					"`youtubers`, " +
 					"`mappers`, " +

@@ -14,7 +14,7 @@ func (c *client) GetOsuStat(m *discordgo.MessageCreate) error {
 		stat = content[1]   // -top, recent, firsts
 
 		if stat == "-recent" || stat == "-r" {
-			offset = "1"
+			offset = "0"
 			stat = "recent"
 		} else if stat == "-top" || stat == "-t" {
 			offset = "100"
@@ -31,7 +31,7 @@ func (c *client) GetOsuStat(m *discordgo.MessageCreate) error {
 			return err
 		}
 
-		embed, err := c.createRecentScoreEmbed(scores)
+		embed, err := c.createRecentScoreEmbed(scores, offset)
 		if err != nil {
 			return err
 		}
@@ -45,8 +45,16 @@ func (c *client) GetOsuStat(m *discordgo.MessageCreate) error {
 		userID = content[1]
 		user, err := c.Osu.GetUser(userID)
 		if err != nil {
-
+			return err
 		}
+
+		if user.Username == "" {
+			if _, err := c.Session.ChannelMessageSend(m.ChannelID, "User does not exist or invalid command"); err != nil {
+				return err
+			}
+			return nil
+		}
+
 		err = c.PostEmbed(m.ChannelID, c.createUserInfoEmbed(user))
 		if err != nil {
 			return err

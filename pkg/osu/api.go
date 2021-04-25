@@ -45,7 +45,11 @@ func (c *Client) GetUserScores(id string, kind string, offset string) (*UserScor
 		return nil, err
 	}
 
-	url := fmt.Sprintf("https://osu.ppy.sh/api/v2/users/%s/scores/%s/", id, kind)
+	var url string
+	if kind == "recent" {
+		url = fmt.Sprintf("https://osu.ppy.sh/api/v2/users/%s/scores/%s?include_fails=1&mode=osu&limit=12&offset=1", id, kind)
+	}
+	url = fmt.Sprintf("https://osu.ppy.sh/api/v2/users/%s/scores/%s/", id, kind)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Fatal(err)
