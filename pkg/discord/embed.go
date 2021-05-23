@@ -94,14 +94,16 @@ func (c *client) createRecentScoreEmbed(scores *osu.UserScores, offset string) (
 	accStats := fmt.Sprintf("[**%d**/**%d**/**%d**/**%d**]", score.Statistics.Count300, score.Statistics.Count100, score.Statistics.Count50, score.Statistics.CountMiss)
 
 	// try to determine if the score was an fc
-	// not sure how to do this for slider breaks though
 	var ifFC string
 	var description string
-	if score.MaxCombo < performance.BeatmapInfo.MaxCombo && score.Statistics.CountMiss > 0 {
+	if performance.BeatmapInfo.MaxCombo - score.MaxCombo < 10 {
 		ifFC = fmt.Sprintf("**%.2fpp** for __%.2f%%__", performance.PpFc.PP.Total, performance.PpFc.PP.ComputedAccuracy.Value()*100)
 		description = fmt.Sprintf("> **Map:** %s\n > **Acc:** %s\n > **FC:** %s", mapInfo, accStats, ifFC)
-	} else {
+	} else if score.Perfect {
 		description = fmt.Sprintf("> **Map:** %s\n > **Acc:** %s\n", mapInfo, accStats)
+	} else {
+		ifFC = fmt.Sprintf("**%.2fpp** for __%.2f%%__", performance.PpFc.PP.Total, performance.PpFc.PP.ComputedAccuracy.Value()*100)
+		description = fmt.Sprintf("> **Map:** %s\n > **Acc:** %s\n > **FC:** %s", mapInfo, accStats, ifFC)
 	}
 
 	// calculate the time since the score was set

@@ -75,8 +75,6 @@ func (c *Client) GetUserScores(id string, kind string, offset string) (*UserScor
 		log.Fatal(err)
 	}
 
-	fmt.Printf(string(bodyBytes))
-
 	return &scores, nil
 
 }

@@ -7,7 +7,7 @@ import (
 
 func MemberJoin(s *discordgo.Session, member *discordgo.GuildMemberAdd) {
 
-	err := s.GuildMemberRoleAdd(member.GuildID, member.User.ID, ServerRoles["gamer"].ID)
+	err := s.GuildMemberRoleAdd(member.GuildID, member.User.ID, ServerRoles["osu-players"].ID)
 	if err != nil {
 		logger.Log.Error(err)
 		return

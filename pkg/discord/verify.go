@@ -28,7 +28,7 @@ func (c *client) Verify(m *discordgo.MessageCreate) error {
 				return err
 			}
 
-			if user.Statistics.GlobalRank < 1000 {
+			if user.Statistics.GlobalRank < 1000 && user.Statistics.GlobalRank != 0 {
 				err := c.Session.GuildMemberRoleAdd(m.Message.GuildID, m.Message.Author.ID, ServerRoles["pro-players"].ID)
 				if err != nil {
 					c.Session.ChannelMessageSend(m.ChannelID, "You should be able to get this role but adding it failed. Ping an Admin because something awful happened")
@@ -40,6 +40,11 @@ func (c *client) Verify(m *discordgo.MessageCreate) error {
 				}
 				return nil
 			} else {
+				if user.Statistics.GlobalRank == 0 {
+					c.Session.ChannelMessageSend(m.ChannelID, "User does not exist, or the osu api is stupid")
+					return fmt.Errorf("invalid pro player role request")
+
+				}
 				c.Session.ChannelMessageSend(m.ChannelID, "Sorry! You need to be 3 digit for the Pro-Players role. Please ping an admin for manual inspection")
 				return fmt.Errorf("invalid pro player role request")
 			}

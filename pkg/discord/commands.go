@@ -45,14 +45,14 @@ func HandleMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	logger.Log.Debugf("Got message %s", m.Content)
+	//logger.Log.Debugf("Got message %s", m.Content)
 	cmd := strings.Split(strings.ToLower(m.Content), " ")[0]
-	logger.Log.Debugf(cmd)
+	//logger.Log.Debugf(cmd)
 
 	// Check if the first string in the message is a valid key in the commands map
 	// If so, calls the function for that command
 	if command, ok := Commands[cmd]; ok {
-		logger.Log.Info("Valid Command")
+		logger.Log.Infof("Valid Command %s", m.Content)
 		err := command.(func(*discordgo.MessageCreate) error)(m)
 		if err != nil {
 			logger.Log.Error(err)
