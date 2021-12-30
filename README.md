@@ -10,7 +10,7 @@ You will need to install Go and create the config.yaml file
 
 ```bash
 $ go build cmd/main.go
-$ ./main /path/to/config.yaml
+$ ./main -c=/path/to/config.yaml
 ```
 
 ### Using Docker
