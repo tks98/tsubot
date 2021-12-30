@@ -70,6 +70,13 @@ commands:
 - A user's basic info can be queried with !info username
 - A user's top score info can be queried with !info -t username
 - A user's most recent score info can be queried with !info -r username
+- A user's most recent 1st place score can be queried with !info -f username
 
-
+## Usage Examples
+### !roles
+![alt-text](https://cdn.discordapp.com/attachments/611191473601511434/926006474336006184/Screen_Shot_2021-12-30_at_12.58.54_AM.png)
+### !info -t Cookiezi
+![alt text](https://cdn.discordapp.com/attachments/611191473601511434/926005060046053396/Screen_Shot_2021-12-30_at_12.52.21_AM.png)
+### !info Woey
+![alt-text](https://cdn.discordapp.com/attachments/611191473601511434/926005309045080064/Screen_Shot_2021-12-30_at_12.54.18_AM.png)
 
