@@ -96,7 +96,7 @@ func (c *client) createRecentScoreEmbed(scores *osu.UserScores, offset string) (
 	// try to determine if the score was an fc
 	var ifFC string
 	var description string
-	if performance.BeatmapInfo.MaxCombo - score.MaxCombo < 10 {
+	if performance.BeatmapInfo.MaxCombo-score.MaxCombo < 10 {
 		ifFC = fmt.Sprintf("**%.2fpp** for __%.2f%%__", performance.PpFc.PP.Total, performance.PpFc.PP.ComputedAccuracy.Value()*100)
 		description = fmt.Sprintf("> **Map:** %s\n > **Acc:** %s\n > **FC:** %s", mapInfo, accStats, ifFC)
 	} else if score.Perfect {
